@@ -26,6 +26,13 @@ build_samples:
 local-fmt:
 	gofmt -l -d $(GO_FILES)
 
+.PHONY: local-install-in-faas-cli
+local-install-in-faas-cli:
+	CGO_ENABLED=0 go build -o . --ldflags "-s -w \
+	   -X github.com/openfaas/faas-cli/version.GitCommit=${.GIT_COMMIT} \
+	   -X github.com/openfaas/faas-cli/version.Version=${.GIT_VERSION}" \
+	   -a -installsuffix cgo
+
 .PHONY: local-goimports
 local-goimports:
 	goimports -w $(GO_FILES)
