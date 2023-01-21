@@ -24,7 +24,17 @@ const AdditionalPackageBuildArg = "ADDITIONAL_PACKAGE"
 // BuildImage construct Docker image from function parameters
 // TODO: refactor signature to a struct to simplify the length of the method header
 func BuildImage(image string, handler string, functionName string, language string, nocache bool, squash bool, shrinkwrap bool, buildArgMap map[string]string, buildOptions []string, tagMode schema.BuildFormat, buildLabelMap map[string]string, quietBuild bool, copyExtraPaths []string) error {
-
+	{
+		fmt.Printf("BuildImage Func:\nimage: %s, handler: %s\nfunctionName: %s, language: %s\n", image, handler,
+			functionName, language)
+		fmt.Printf("	nocache: %t, squash: %t, shrinkwrap: %t\n", nocache, squash, shrinkwrap)
+		fmt.Println("	buildArgMap: ", buildArgMap)
+		fmt.Println("	buildOptions: ", buildOptions)
+		fmt.Println("	tagMode: ", tagMode)
+		fmt.Println(" buildLabelMap: ", buildLabelMap)
+		fmt.Println("	quietBuild: ", quietBuild)
+		fmt.Println("	copyExtraPaths: ", copyExtraPaths)
+	}
 	if stack.IsValidTemplate(language) {
 		pathToTemplateYAML := fmt.Sprintf("./template/%s/template.yml", language)
 		if _, err := os.Stat(pathToTemplateYAML); os.IsNotExist(err) {
@@ -81,7 +91,7 @@ func BuildImage(image string, handler string, functionName string, language stri
 		}
 
 		command, args := getDockerBuildCommand(dockerBuildVal)
-
+		fmt.Println("Docker build command = ", command, "args = ", args)
 		envs := os.Environ()
 		if mountSSH {
 			envs = append(envs, "DOCKER_BUILDKIT=1")

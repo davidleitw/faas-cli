@@ -4,6 +4,7 @@
 package main
 
 import (
+	// "faas-cli/commands"
 	"fmt"
 	"os"
 
@@ -11,7 +12,6 @@ import (
 )
 
 func main() {
-	fmt.Println("My faas cli version")
 	customArgs, err := translateLegacyOpts(os.Args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())

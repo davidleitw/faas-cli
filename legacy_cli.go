@@ -11,7 +11,7 @@ import (
 )
 
 func translateLegacyOpts(args []string) ([]string, error) {
-
+	fmt.Println("translateLegacyOpts")
 	legacyOptMapping := map[string]string{
 		"-handler":  "--handler",
 		"-image":    "--image",

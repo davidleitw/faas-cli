@@ -102,6 +102,7 @@ via flags.`,
 
 // preRunBuild validates args & flags
 func preRunBuild(cmd *cobra.Command, args []string) error {
+	fmt.Println(args)
 	language, _ = validateLanguageFlag(language)
 
 	mapped, err := parseBuildArgs(buildArgs)
@@ -163,7 +164,7 @@ func runBuild(cmd *cobra.Command, args []string) error {
 			services = *parsedServices
 		}
 	}
-
+	fmt.Printf("%+v\n", services)
 	if len(services.StackConfiguration.TemplateConfigs) > 0 && !disableStackPull {
 		newTemplateInfos, err := filterExistingTemplates(services.StackConfiguration.TemplateConfigs, "./template")
 		if err != nil {
@@ -174,11 +175,14 @@ func runBuild(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("could not pull templates from function yaml file: %s", err.Error())
 		}
 	} else {
+		// 確保當前目錄底下有 template/
 		templateAddress := getTemplateURL("", os.Getenv(templateURLEnvironment), DefaultTemplateRepository)
 		if pullErr := pullTemplates(templateAddress); pullErr != nil {
 			return fmt.Errorf("could not pull templates for OpenFaaS: %v", pullErr)
 		}
 	}
+
+	fmt.Printf("services.Function: %+v\n", services.Functions)
 	if len(services.Functions) == 0 {
 		if len(image) == 0 {
 			return fmt.Errorf("please provide a valid --image name for your Docker image")
@@ -308,5 +312,8 @@ func pullTemplates(templateURL string) error {
 }
 
 func combineBuildOpts(YAMLBuildOpts []string, buildFlagBuildOpts []string) []string {
-	return util.MergeSlice(YAMLBuildOpts, buildFlagBuildOpts)
+	res := util.MergeSlice(YAMLBuildOpts, buildFlagBuildOpts)
+	fmt.Println("\nIn combineBuildOpts func: ", YAMLBuildOpts, " + ", buildFlagBuildOpts, " => ", res)
+	fmt.Println()
+	return res
 }
